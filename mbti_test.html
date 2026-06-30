@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>간이 MBTI 성격유형 진단 (12문항)</title>
+    <style>
+        :root {
+            --primary-color: #5c6bc0;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+        }
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+        .description {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 35px;
+            font-size: 0.95rem;
+        }
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            border-left: 5px solid var(--primary-color);
+            padding-left: 12px;
+            margin: 35px 0 15px 0;
+            color: #1a252f;
+        }
+        .question-card {
+            background: #fdfdfd;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 18px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .statement-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .left-statement { color: #34495e; text-align: left; width: 45%; }
+        .right-statement { color: #34495e; text-align: right; width: 45%; }
+        .radio-group {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            border-top: 1px dashed #edf2f7;
+            padding-top: 15px;
+        }
+        .radio-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #95a5a6;
+            cursor: pointer;
+            width: 50px;
+        }
+        .radio-item input {
+            margin-bottom: 6px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: background 0.2s, transform 0.1s;
+        }
+        button:hover {
+            background-color: #475569;
+        }
+        button:active {
+            transform: scale(0.99);
+        }
+        #result-modal {
+            display: none;
+            margin-top: 40px;
+            padding: 25px;
+            background: #eef2ff;
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        #result-type {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 15px 0;
+            letter-spacing: 4px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>MBTI 성격유형 간이 진단</h1>
+    <p class="description">각 문항을 읽고 자신에게 더 가까운 쪽에 체크해 주세요. (중간은 3점)</p>
+
+    <form id="mbti-form">
+        <div class="section-title">1. 에너지의 방향 (E vs I)</div>
+        <div class="question-card">
+            <div class="statement-container">
+                <span class="left-statement">여러 사람과 함께 있을 때 에너지를 얻는다.</span>
+                <span class="right-statement">혼자만의 시간을 가질 때 에너지가 충전된다.</span>
+            </div>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="ei1" value="1" required>1(좌)</label>
+                <label class="radio-item"><input type="radio" name="ei1" value="2">2</label>
+                <label class="radio-item"><input type="radio" name="ei1" value="3">3</label>
+                <label class="radio-item"><input type="radio" name="ei1" value="4">4</label>
+                <label class="radio-item"><input type="radio" name="ei1" value="5">5(우)</label>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="statement-container">
+                <span class="left-statement">말이나 행동이 먼저 나가고 나중에 생각하는 편이다.</span>
+                <span class="right-statement">생각을 충분히 정리한 후에 말하거나 행동한다.</span>
+            </div>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="ei2" value="1" required>1(좌)</label>
+                <label class="radio-item"><input type="radio" name="ei2" value="2">2</label>
+                <label class="radio-item"><input type="radio" name="ei2" value="3">3</label>
+                <label class="radio-item"><input type="radio" name="ei2" value="4">4</label>
+                <label class="radio-item"><input type="radio" name="ei2" value="5">5(우)</label>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="statement-container">
+                <span class="left-statement">넓고 다양한 대인관계를 선호한다.</span>
+                <span class="right-statement">소수의 깊이 있는 대인관계를 선호한다.</span>
+            </div>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="ei3" value="1" required>1(좌)</label>
+                <label class="radio-item"><input type="radio" name="ei3" value="2">2</label>
+                <label class="radio-item"><input type="radio" name="ei3" value="3">3</label>
+                <label class="radio-item"><input type="radio" name="ei3" value="4">4</label>
+                <label class="radio-item"><input type="radio" name="ei3" value="5">5(우)</label>
+            </div>
+        </div>
+
+        <div class="section-title">2. 정보 인식의 방식 (S vs N)</div>
+        <div class="question-card">
+            <div class="statement-container">
+                <span class="left-statement">현재의 사실, 실제 경험, 구체적인 데이터를 중시한다.</span>
+                <span class="right-statement">미래의 가능성, 의미와 아이디어, 전체적인 흐름을 중시한다.</span>
+            </div>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="sn1" value="1" required>1(좌)</label>
+                <label class="radio-item"><input type="radio" name="sn1" value="2">2</label>
+                <label class="radio-item"><input type="radio" name="sn1" value="3">3</label>
+                <label class="radio-item"><input type="radio" name="sn1" value="4">4</label>
+                <label class="radio-item"><input type="radio" name="sn1" value="5">5(우)</label>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="statement-container">
+                <span class="left-statement">일을 할 때 숲보다는 나무(디테일)를 먼저 본다.</span>
+                <span class="right-statement">일을 할 때 나무보다는 숲(전체 분위기)을 먼저 본다.</span>
+            </div>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="sn2" value="1" required>1(좌)</label>
+                <label class="radio-item"><input type="radio" name="sn2" value="2">2</label>
+                <label class="radio-item"><input type="radio" name="sn2" value="3">3</label>
+                <label class="radio-item"><input type="radio" name="sn2" value="4">4</label>
+                <label class="radio-item"><input type="radio" name="sn2" value="5">5(우)</label>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="statement-container">
+                <span class="left-statement">"기존에 하던 방식"이나 증명된 방법을 선호한다.</span>
+                <span class="right-statement">"새롭고 창의적인 방식"이나 변화를 시도하는 걸 좋아한다.</span>
+            </div>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="sn3" value="1" required>1(좌)</label>
+                <label class="radio-item"><input type="radio" name="sn3" value="2">2</label>
+                <label class="radio-item"><input type="radio" name="sn3" value="3">3</label>
+                <label class="radio-item"><input type="radio" name="sn3" value="4">4</label>
+                <label class="radio-item"><input type="radio" name="sn3" value="5">5(우)</label>
+            </div>
+        </div>
+
+        <div class="section-title">3. 판단과 결정의 방식 (T vs F)</div>
+        <div class="question-card">
+            <div class="statement-container">
+                <span class="left-statement">결정할 때 객관적인 진실, 논리, 인과관계가 중요하다.</span>
+                <span class="right-statement">결정할 때 사람들의 감정, 관계, 상황적 가치가 중요하다.</span>
+            </div>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="tf1" value="1" required>1(좌)</label>
+                <label class="radio-item"><input type="radio" name="tf1" value="2">2</label>
+                <label class="radio-item"><input type="radio" name="tf1" value="3">3</label>
+                <label class="radio-item"><input type="radio" name="tf1" value="4">4</label>
+                <label class="radio-item"><input type="radio" name="tf1" value="5">5(우)</label>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="statement-container">
+                <span class="left-statement">주변에서 "이성적이다", "냉철하다"라는 말을 자주 듣는다.</span>
+                <span class="right-statement">주변에서 "공감 능력이 좋다", "따뜻하다"라는 말을 자주 듣는다.</span>
+            </div>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="tf2" value="1" required>1(좌)</label>
+                <label class="radio-item"><input type="radio" name="tf2" value="2">2</label>
+                <label class="radio-item"><input type="radio" name="tf2" value="3">3</label>
+                <label class="radio-item"><input type="radio" name="tf2" value="4">4</label>
+                <label class="radio-item"><input type="radio" name="tf2" value="5">5(우)</label>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="statement-container">
+                <span class="left-statement">친구 고민을 들으면 해결책을 먼저 제시해 주고 싶다.</span>
+                <span class="right-statement">친구 고민을 들으면 그 감정에 먼저 공감해 주고 싶다.</span>
+            </div>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="tf3" value="1" required>1(좌)</label>
+                <label class="radio-item"><input type="radio" name="tf3" value="2">2</label>
+                <label class="radio-item"><input type="radio" name="tf3" value="3">3</label>
+                <label class="radio-item"><input type="radio" name="tf3" value="4">4</label>
+                <label class="radio-item"><input type="radio" name="tf3" value="5">5(우)</label>
+            </div>
+        </div>
+
+        <div class="section-title">4. 생활 양식 (J vs P)</div>
+        <div class="question-card">
+            <div class="statement-container">
+                <span class="left-statement">여행이나 일을 시작하기 전, 구체적인 계획을 세워야 편하다.</span>
+                <span class="right-statement">상황에 따라 유연하게 대처하며, 즉흥적인 것을 즐긴다.</span>
+            </div>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="jp1" value="1" required>1(좌)</label>
+                <label class="radio-item"><input type="radio" name="jp1" value="2">2</label>
+                <label class="radio-item"><input type="radio" name="jp1" value="3">3</label>
+                <label class="radio-item"><input type="radio" name="jp1" value="4">4</label>
+                <label class="radio-item"><input type="radio" name="jp1" value="5">5(우)</label>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="statement-container">
+                <span class="left-statement">마감 기한을 여유 있게 두고 미리 끝내는 편이다.</span>
+                <span class="right-statement">마감이 임박했을 때 집중력이 발휘되어 막판에 끝낸다.</span>
+            </div>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="jp2" value="1" required>1(좌)</label>
+                <label class="radio-item"><input type="radio" name="jp2" value="2">2</label>
+                <label class="radio-item"><input type="radio" name="jp2" value="3">3</label>
+                <label class="radio-item"><input type="radio" name="jp2" value="4">4</label>
+                <label class="radio-item"><input type="radio" name="jp2" value="5">5(우)</label>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="statement-container">
+                <span class="left-statement">정리정돈이 잘된 환경이나 규칙적인 일과를 선호한다.</span>
+                <span class="right-statement">자유롭고 자율적인 환경, 변화가 많은 일과를 선호한다.</span>
+            </div>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="jp3" value="1" required>1(좌)</label>
+                <label class="radio-item"><input type="radio" name="jp3" value="2">2</label>
+                <label class="radio-item"><input type="radio" name="jp3" value="3">3</label>
+                <label class="radio-item"><input type="radio" name="jp3" value="4">4</label>
+                <label class="radio-item"><input type="radio" name="jp3" value="5">5(우)</label>
+            </div>
+        </div>
+
+        <button type="button" onclick="calculateMBTI()">결과 확인하기</button>
+    </form>
+
+    <div id="result-modal">
+        <h2>당신의 예상 MBTI 유형은?</h2>
+        <div id="result-type">XXXX</div>
+        <p>※ 본 검사는 간이 테스트이므로 실제 정식 검사 결과와 다를 수 있습니다.</p>
+    </div>
+</div>
+
+<script>
+    function calculateMBTI() {
+        const form = document.getElementById('mbti-form');
+        if (!form.checkValidity()) {
+            alert("아직 체크하지 않은 문항이 있습니다. 모든 문항을 선택해 주세요!");
+            return;
+        }
+
+        // 지표별로 3개 문항의 점수 평균 계산 함수
+        const getAverageScore = (name1, name2, name3) => {
+            const v1 = parseInt(document.querySelector(`input[name="${name1}"]:checked`).value);
+            const v2 = parseInt(document.querySelector(`input[name="${name2}"]:checked`).value);
+            const v3 = parseInt(document.querySelector(`input[name="${name3}"]:checked`).value);
+            return (v1 + v2 + v3) / 3;
+        };
+
+        // 평균 3점 미만이면 왼쪽 성향(E/S/T/J), 3점 이상(3점 포함)이면 오른쪽 성향(I/N/F/P)
+        const E_I = getAverageScore('ei1', 'ei2', 'ei3') < 3 ? 'E' : 'I';
+        const S_N = getAverageScore('sn1', 'sn2', 'sn3') < 3 ? 'S' : 'N';
+        const T_F = getAverageScore('tf1', 'tf2', 'tf3') < 3 ? 'T' : 'F';
+        const J_P = getAverageScore('jp1', 'jp2', 'jp3') < 3 ? 'J' : 'P';
+
+        const finalMBTI = E_I + S_N + T_F + J_P;
+
+        // 결과 화면 업데이트 및 노출
+        document.getElementById('result-type').innerText = finalMBTI;
+        document.getElementById('result-modal').style.display = 'block';
+        
+        // 결과 영역으로 부드럽게 화면 이동
+        document.getElementById('result-modal').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
